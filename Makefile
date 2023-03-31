@@ -2,21 +2,43 @@ CC = g++
 CFLAGS = -Wall -Werror
 TARGET = kry
 
+sources = \
+	utils.cpp \
+	argParse.cpp \
+	encrypt.cpp \
+	decrypt.cpp \
+	analyse.cpp \
+	kry.cpp
+
+headers = \
+	utils.hpp \
+	argParse.hpp \
+	encrypt.hpp \
+	decrypt.hpp \
+	analyse.hpp \
+	kry.hpp
+
+objects = \
+	utils.o \
+	argParse.o \
+	encrypt.o \
+	decrypt.o \
+	analyse.o \
+	kry.o
+
 .PHONY: all clean pack
 
 all: $(TARGET)
 
-$(TARGET): $(TARGET).o
-		$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).o
-		rm $(TARGET).o
+$(TARGET): $(objects)
+		$(CC) $(CFLAGS) -o $(TARGET) $^
+		$(MAKE) clean
 
-$(TARGET).o: $(TARGET).cpp
-		$(CC) $(CFLAGS) -c $(TARGET).cpp
+$(objects): $(sources)
+		$(CC) $(CFLAGS) -c $^
 
-clean:
-		rm -f $(TARGET)
-		rm -f $(TARGET).o
-		rm -f 221701.zip
+clean: $(objects)
+		rm -f $^
 
 pack: all
-	zip 221701.tar Makefile kry.cpp README doc.pdf
+	zip 221701.zip Makefile dokumentace.pdf $(sources) $(headers)
